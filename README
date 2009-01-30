@@ -1,0 +1,3 @@
+scriptextual will be a tool for browser-based text manipulation.
+The idea behind it is pretty simple. There is a textarea and a list of function names. Click a function name to apply the associated function to the text in the textarea to provide line numbering, stripping of leading/trailing whitespace and the like.
+I have plenty of ideas about how to expand this little tool into lots of directions, so let's just see how it evolves.
