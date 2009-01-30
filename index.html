@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>scriptTEXTual</title>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script type="text/javascript">
+  var functions = {
+    func_strip_whitespace_in_lines: function(text) {
+      var lines = text.split(/\n/);
+      for (var i = 0; i < lines.length; i++)
+      {
+        lines[i] = lines[i].replace(/^\s+/, '').replace(/\s+$/, '');
+      }
+      return lines.join('\n');
+    },
+    func_add_line_numbers: function(text) {
+      lines = text.split(/\n/);
+      var digits = Math.ceil(Math.log(lines.length) / Math.LN10);
+      for (var i = 0; i < lines.length; i++)
+      {
+        var prefix = (i + 1).toString();
+        while (prefix.length < digits + 1)
+        prefix += ' ';
+        lines[i] = prefix + lines[i];
+      }
+      return lines.join('\n');
+    }
+  };
+
+  $(function() {
+    $('#functions > li').each(function(item) {
+      $(this).click(function() {
+        $('#content').val(functions[this.id]($('#content').val()));
+      });
+    });
+  });
+  </script>
+</head>
+<body>
+  <h1>Write or paste text, then apply functions from the list below the textarea to transform it.</h1>
+  <textarea id="content" rows="20" cols="80"></textarea>
+  <ul id="functions">
+    <li id="func_strip_whitespace_in_lines">Remove leading and trailing whitespace in each line</li>
+    <li id="func_add_line_numbers">Add line numbers and all necessary spaces between numbers and text for proper alignment</li>
+  </ul>
+</body>
+</html>
