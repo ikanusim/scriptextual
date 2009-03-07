@@ -41,6 +41,17 @@ var functions = {
       return lines.join('\n');
     }
   },
+  func_remove_line_numbers: {
+    description: 'Add line numbers and all necessary spaces between numbers and text for proper alignment',
+    call: function(text) {
+      var lines = text.split(/\n/);
+      for (var i = 0; i < lines.length; i++)
+      {
+        lines[i] = lines[i].replace(/^\d+\s+/, '');
+      }
+      return lines.join('\n');
+    }
+  },
   func_add_date_mark: {
     description: 'Append a time-tracking block for the current day',
     call: function(text) {
