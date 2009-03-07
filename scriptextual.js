@@ -42,7 +42,7 @@ var functions = {
     }
   },
   func_remove_line_numbers: {
-    description: 'Add line numbers and all necessary spaces between numbers and text for proper alignment',
+    description: 'Remove line numbers and all necessary spaces between numbers and text for proper alignment',
     call: function(text) {
       var lines = text.split(/\n/);
       for (var i = 0; i < lines.length; i++)
