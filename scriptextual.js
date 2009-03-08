@@ -1,7 +1,7 @@
 var stx = {
   i: function(s) { return parseInt(s.replace(/^0/, '')) },
   duration: function(line) {
-    var parts = line.match(/(\d{2})(\d{2})-(\d{2})(\d{2})/);
+    var parts = line.match(stx.patterns.duration);
     var bounds = line.split('-');
     var from = stx.i(parts[1]) * 60 + stx.i(parts[2]);
     var to = stx.i(parts[3]) * 60 + stx.i(parts[4]);
@@ -11,8 +11,51 @@ var stx = {
   },
   hhmm: function(m) {
     return $.sprintf('%02d%02d', Math.floor(m / 60), m % 60);
+  },
+  looks_like: function(pattern) {
+    
+  },
+  _pattern_parts: {
+    date: [
+      { token: '\\d{4}', capturable: true },
+      { token: '-', capturable: false },
+      { token: '\\d{2}', capturable: true },
+      { token: '-', capturable: false },
+      { token: '\\d{2}', capturable: true }
+    ],
+    time: [
+      { token: '\\d{2}', capturable: true },
+      { token: '\\d{2}', capturable: true }
+    ]
+  },
+  _patterns: {
+    duration: ['time', '-', 'time'],
+    date_mark_with_sum: ['date', ' \\(', 'time', '\\)']
   }
 };
+stx['patterns'] = {};
+for (var pattern_name in stx._patterns)
+{
+  var regexp = '';
+  for (var i = 0; i < stx._patterns[pattern_name].length; i++)
+  {
+    var pattern_part = stx._patterns[pattern_name][i];
+    if (stx._pattern_parts[pattern_part])
+    {
+      for (var j = 0; j < stx._pattern_parts[pattern_part].length; j++)
+      {
+        if (stx._pattern_parts[pattern_part][j].capturable)
+          regexp += '(';
+        regexp += stx._pattern_parts[pattern_part][j].token;
+        if (stx._pattern_parts[pattern_part][j].capturable)
+          regexp += ')';
+      }
+    }
+    else
+      regexp += pattern_part;
+  }
+  stx.patterns[pattern_name] = new RegExp(regexp)
+}
 
 var functions = {
   func_strip_whitespace_in_lines: {
@@ -77,12 +120,15 @@ var functions = {
       var blocks = text.split(/\n\n/);
       for (var i = 0; i < blocks.length; i++)
       {
-        var minutes = 0;
         var block_lines = blocks[i].split(/\n/);
-        for (var j = 1; j < block_lines.length; j++)
-          minutes += stx.duration(block_lines[j]);
-        block_lines[0] += ' (' + stx.hhmm(minutes) + ')';
-        blocks[i] = block_lines.join('\n');
+        if (!stx.patterns.date_mark_with_sum.test(block_lines[0]))
+        {
+          var minutes = 0;
+          for (var j = 1; j < block_lines.length; j++)
+            minutes += stx.duration(block_lines[j]);
+          block_lines[0] += ' (' + stx.hhmm(minutes) + ')';
+          blocks[i] = block_lines.join('\n');
+        }
       }
       return blocks.join('\n\n');
     }
