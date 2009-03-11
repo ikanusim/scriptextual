@@ -101,7 +101,7 @@ var functions = {
       var blocks = text.split(/\n\n/);
       var date = new Date();
       var date_mark = $.sprintf('%04d-%02d-%02d', date.getYear() + 1900, date.getMonth() + 1, date.getDate());
-      return text + '\n' + date_mark + '\n';
+      return text + '\n' + date_mark;
     }
   },
   func_toggle_status: {
@@ -110,7 +110,8 @@ var functions = {
       var lines = text.split(/\n/);
       var date = new Date();
       var mark = $.sprintf('%02d%02d', date.getHours(), date.getMinutes());
-      mark += lines[lines.length - 1].match(/^\d+-$/) ? '\n' : '-';
+      if (!/^\d+-$/.test(lines[lines.length - 1]))
+        mark = '\n' + mark + '-';
       return text + mark;
     }
   },
