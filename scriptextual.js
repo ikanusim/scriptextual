@@ -97,6 +97,7 @@ var functions = {
   },
   func_add_date_mark: {
     description: 'Append a time-tracking block for the current day',
+    scrollDown: true,
     call: function(text) {
       var blocks = text.split(/\n\n/);
       var date = new Date();
@@ -106,6 +107,7 @@ var functions = {
   },
   func_toggle_status: {
     description: 'Toggle status, i.e. add start mark when idle, add stop mark when working',
+    scrollDown: true,
     call: function(text) {
       var lines = text.split(/\n/);
       var date = new Date();
@@ -117,6 +119,7 @@ var functions = {
   },
   func_calculcate_sums: {
     description: 'Calculate daily sums and put them in parentheses next to the date marks',
+    scrollDown: true,
     call: function(text) {
       var blocks = text.split(/\n\n/);
       for (var i = 0; i < blocks.length; i++)
@@ -143,6 +146,8 @@ function init_scriptextual(params)
   {
     function_list.append($(document.createElement('li')).text(functions[function_name].description).data('function_name', function_name).click(function() {
       $('#' + params.workbench).val(functions[$(this).data('function_name')].call($('#' + params.workbench).val()));
+      if (functions[$(this).data('function_name')]['scrollDown'])
+        $('#' + params.workbench).attr('scrollTop', $('#' + params.workbench).attr('scrollHeight'));
     }));
     $('#' + params.handle_box).append(function_list);
   }
