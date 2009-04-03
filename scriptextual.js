@@ -102,7 +102,7 @@ var functions = {
       var blocks = text.split(/\n\n/);
       var date = new Date();
       var date_mark = $.sprintf('%04d-%02d-%02d', date.getYear() + 1900, date.getMonth() + 1, date.getDate());
-      return text + '\n' + date_mark;
+      return text + '\n\n' + date_mark;
     }
   },
   func_toggle_status: {
